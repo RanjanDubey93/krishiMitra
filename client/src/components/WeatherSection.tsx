@@ -1,6 +1,7 @@
-import { Cloud, MapPin } from 'lucide-react';
+// Change: Imported specific icons to match the new design.
+import { Cloud, CloudRain, AlertTriangle, MapPin, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useStore } from '@/store/useStore';
 
 export function WeatherSection() {
@@ -8,68 +9,81 @@ export function WeatherSection() {
   const weatherNotices = notices.filter(notice => notice.type === 'weather');
 
   return (
-    <section className="bg-gradient-to-br from-indigo-600 via-purple-600 to-blue-700 py-16 px-4">
-      <div className="max-w-7xl mx-auto">
+    // Change: Set section to be full-screen and use flex to center the content vertically.
+    <section className="min-h-screen bg-gradient-to-br from-indigo-600 via-purple-600 to-blue-700 py-16 px-4 flex items-center">
+      <div className="max-w-7xl mx-auto w-full">
         <div className="flex items-center justify-center gap-3 mb-12">
           <Cloud className="h-10 w-10 text-white" />
           <h2 className="text-4xl font-bold text-white">Weather Update</h2>
         </div>
 
+        {/* Change: The entire grid is restructured to match your 3-column design. */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Current Weather */}
-          <div className="space-y-6">
-            <Card className="bg-white/20 backdrop-blur-sm border-white/30 p-8 text-white">
-              <div className="text-center">
-                <div className="text-6xl font-bold mb-2">{weather.temperature}°C</div>
-                <div className="text-xl font-medium">{weather.condition}</div>
-              </div>
+          
+          {/* --- Column 1: Current Weather & Alert --- */}
+          {/* Change: This column now holds two vertically stacked cards. */}
+          <div className="flex flex-col gap-8">
+            <Card className="bg-white/10 backdrop-blur-lg border-white/20 text-white text-center p-6 flex-grow flex flex-col justify-center">
+              <CardContent className="p-0">
+                <div className="text-7xl font-bold">{weather.temperature}°C</div>
+                <div className="text-xl font-medium mt-2 opacity-90">{weather.condition}</div>
+              </CardContent>
             </Card>
-
-            <Card className="bg-red-500/90 backdrop-blur-sm border-red-400/50 p-6 text-white">
-              <div className="text-center">
-                <div className="text-3xl font-bold">{weather.alert}</div>
-              </div>
+            <Card className="bg-red-500/80 backdrop-blur-lg border-red-400/50 text-white text-center p-6 flex-grow flex flex-col justify-center">
+              <CardContent className="p-0">
+                <div className="text-3xl font-bold tracking-wider">{weather.alert}</div>
+              </CardContent>
             </Card>
           </div>
 
-          {/* Notices and Forecast */}
-          <div className="space-y-6">
-            <Card className="bg-white/20 backdrop-blur-sm border-white/30 p-6">
-              <h3 className="text-2xl font-bold text-white text-center mb-6">NOTICE</h3>
-              <div className="space-y-3">
+          {/* --- Column 2: Notices & Forecast --- */}
+          {/* Change: This column also holds two vertically stacked cards. */}
+          <div className="flex flex-col gap-8">
+            <Card className="bg-white/10 backdrop-blur-lg border-white/20 text-white">
+              <CardHeader>
+                <CardTitle className="text-center text-2xl font-bold">NOTICE</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
                 {weatherNotices.map((notice) => (
+                  // Change: Buttons are restyled for a cleaner look with an icon.
                   <Button
                     key={notice.id}
                     variant="outline"
-                    className="w-full bg-white/20 border-white/30 text-white hover:bg-white/30 text-left justify-start"
+                    className="w-full flex justify-between items-center bg-white/10 border-white/20 hover:bg-white/20 text-white"
                   >
-                    {notice.title}
+                    <span>{notice.title}</span>
+                    <ChevronRight className="h-4 w-4" />
                   </Button>
                 ))}
-              </div>
+              </CardContent>
             </Card>
-
-            {/* Weekly Forecast */}
-            <Card className="bg-white/20 backdrop-blur-sm border-white/30 p-6">
-              <div className="grid grid-cols-7 gap-2">
-                {weather.forecast.map((day, index) => (
-                  <div key={index} className="text-center text-white">
-                    <div className="text-2xl mb-2">{day.icon}</div>
-                    <div className="text-sm font-medium">{day.day}</div>
-                  </div>
-                ))}
-              </div>
+            <Card className="bg-white/10 backdrop-blur-lg border-white/20 text-white p-4">
+              <CardContent className="p-2">
+                <div className="grid grid-cols-7 gap-2">
+                  {weather.forecast.map((day, index) => (
+                    <div key={index} className="text-center p-2 rounded-lg hover:bg-white/10 transition-colors cursor-default">
+                      {/* Change: Replaced emoji with a consistent Lucide icon. */}
+                      <CloudRain className="h-7 w-7 mx-auto mb-2 opacity-80" />
+                      <div className="text-sm font-semibold">{day.day}</div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
             </Card>
           </div>
 
-          {/* India Map */}
-          <Card className="bg-white/20 backdrop-blur-sm border-white/30 p-8 flex items-center justify-center">
-            <div className="text-center text-white">
-              <MapPin className="h-24 w-24 mx-auto mb-4 text-blue-300" />
-              <div className="text-lg font-medium">India Weather Map</div>
-              <div className="text-sm opacity-80 mt-2">Regional Overview</div>
-            </div>
-          </Card>
+          {/* --- Column 3: India Map --- */}
+          {/* Change: This column is now a single, full-height card. */}
+          <div className="flex">
+            <Card className="w-full bg-white/10 backdrop-blur-lg border-white/20 text-white p-8 flex flex-col items-center justify-center">
+              <CardContent className="p-0 text-center">
+                <MapPin className="h-24 w-24 mx-auto text-blue-300" />
+                <div className="text-xl font-semibold mt-4">India Weather Map</div>
+                <div className="text-sm opacity-80 mt-1">Regional Overview</div>
+              </CardContent>
+            </Card>
+          </div>
+
         </div>
       </div>
     </section>
